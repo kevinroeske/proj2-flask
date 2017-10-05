@@ -60,3 +60,6 @@ docs/_build/
 
 # PyBuilder
 target/
+
+# ignore credentials.ini
+credentials.ini
