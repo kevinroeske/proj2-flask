@@ -9,7 +9,7 @@ logging.basicConfig(format='%(levelname)s:%(message)s',
 log = logging.getLogger(__name__)
 
 base = arrow.now()   # Default, replaced if file has 'begin: ...'
-
+start_date = arrow.get(2017,9,25,0,0)   #this is the beginning date of the term, used to calculate week
 
 def process(raw):
     """
@@ -19,6 +19,12 @@ def process(raw):
     non-blank character on a line, it is a comment ad skipped. 
     """
     field = None
+
+    days_passed = 0
+    current_date = arrow.now()
+    for days in arrow.Arrow.span_range('day', start_date, current_date):
+        days_passed += 1
+    current_week = int(days_passed / 7) + 1
     entry = {}
     cooked = []
     for line in raw:
@@ -52,7 +58,10 @@ def process(raw):
             entry['topic'] = ""
             entry['project'] = ""
             entry['week'] = content
-
+            if int(content) == current_week:
+                entry['is_current_week'] = "true"
+            else:
+                entry['is_current_week'] = "false"
         elif field == 'topic' or field == 'project':
             entry[field] = content
 
