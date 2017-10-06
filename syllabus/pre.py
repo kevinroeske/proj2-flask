@@ -20,10 +20,10 @@ def process(raw):
     """
     field = None
 
-    days_passed = 0
-    current_date = arrow.now()
-    for days in arrow.Arrow.span_range('day', start_date, current_date):
-        days_passed += 1
+    days_passed = 0                                                         #I went through the arrow doccumentation, and it wasn't clear
+    current_date = arrow.now()                                              #whether the span_range() method returned anything like an integer
+    for days in arrow.Arrow.span_range('day', start_date, current_date):    #value, but I did see that i could iterate over it and
+        days_passed += 1                                                    #use an accumulator, then it's simple math to get the week number
     current_week = int(days_passed / 7) + 1
     entry = {}
     cooked = []
@@ -59,8 +59,8 @@ def process(raw):
             entry['project'] = ""
             entry['week'] = content
             if int(content) == current_week:
-                entry['is_current_week'] = "true"
-            else:
+                entry['is_current_week'] = "true"           #here we look at the current week and see if it's the one we are packaging,
+            else:                                           #and set a flag accordingly in a field we add to the return object
                 entry['is_current_week'] = "false"
         elif field == 'topic' or field == 'project':
             entry[field] = content
